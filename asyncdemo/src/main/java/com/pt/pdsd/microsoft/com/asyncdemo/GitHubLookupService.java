@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class GitHubLookupService {
@@ -27,7 +28,8 @@ public class GitHubLookupService {
                 user);
         User results = restTemplate.getForObject(url, User.class);
 
-        Thread.sleep(1000L);
-        return CompletableFuture.completedFuture(results);
+        return CompletableFuture.completedFuture(results)
+                .completeOnTimeout(results, 2, TimeUnit.SECONDS);
+
     }
 }
